@@ -18,13 +18,13 @@ function handleMove(event) {
   if (!square.textContent) {
     // Check if player names are provided, otherwise default to "X" and "Y"
     firstPlayer = document.getElementById("f").value || "X";
-    secondPlayer = document.getElementById("s").value || "Y";
+    secondPlayer = document.getElementById("s").value || "O";
 
     square.textContent = currentPlayer;
-    // Set color for X and Y
+    // Set color for X and O
     square.style.color = currentPlayer === "X" ? "#0c6291" : "#ff9f1c";
     winningLogic();
-    currentPlayer = currentPlayer === "X" ? "Y" : "X";
+    currentPlayer = currentPlayer === "X" ? "O" : "X";
     fsound.play();
     turn.innerHTML = `&nbsp;${currentPlayer}'s Turn!&nbsp;`;
   }
@@ -77,7 +77,7 @@ function clear() {
   squares.forEach((square) => {
     square.textContent = "";
   });
-  currentPlayer = "Y";
+  currentPlayer = "O";
 }
 
 // Event listener for changing modes
