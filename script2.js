@@ -1,4 +1,4 @@
-//function for crating random number 0-9
+// Function for creating random number 0-8
 function rndm() {
   return Math.floor(Math.random() * 9);
 }
@@ -8,8 +8,6 @@ const squares = document.querySelectorAll(".square");
 const turn = document.getElementById("turn");
 const fsound = document.getElementById("myAudio");
 let currentPlayer = "X";
-let changeTurn = document.getElementById("chngTurn");
-let checkForWin;
 
 // Event listener for clicks and touchstart
 squares.forEach((square) => {
@@ -23,13 +21,13 @@ function handleMove(event) {
     square.textContent = currentPlayer;
     square.style.color = currentPlayer === "X" ? "#0c6291" : "#ff9f1c";
     fsound.play();
-    winningLogic();
-    if (!checkForWin) {
-      currentPlayer = currentPlayer === "X" ? "O" : "X";
-      bot();
+    if (winningLogic()) return; // Check for win before switching player
+    if ([...squares].every((square) => square.textContent)) {
+      declareDraw();
+      return;
     }
-
-    winningLogic();
+    currentPlayer = currentPlayer === "X" ? "O" : "X";
+    if (currentPlayer === "O") bot();
   }
 }
 
@@ -42,8 +40,8 @@ function bot() {
       // Check if square exists and is empty
       csquare.style.color = currentPlayer === "X" ? "#0c6291" : "#ff9f1c";
       csquare.textContent = currentPlayer;
-      winningLogic();
 
+      winningLogic();
       currentPlayer = currentPlayer === "X" ? "O" : "X";
 
       break;
@@ -55,7 +53,6 @@ function bot() {
 // Winning logic function
 function winningLogic() {
   // Winning combinations
-
   const winCombinations = [
     [0, 1, 2],
     [3, 4, 5],
@@ -79,24 +76,18 @@ function winningLogic() {
       document.getElementById("winner").textContent = `${winner} WON!!`;
       setTimeout(() => {
         document.getElementById("winner").textContent = "";
-      }, 5000);
+      }, 4000);
       clear();
-      checkForWin = true;
-      return;
-    } else {
-      checkForWin = false;
+      return true;
     }
   }
-
-  checkDraws();
+  return false;
 }
 
-// Check for a draw
-function checkDraws() {
-  if ([...squares].every((square) => square.textContent)) {
-    clear();
-    alert("DRAW :)");
-  }
+// Declare draw function
+function declareDraw() {
+  clear();
+  alert("DRAW :)");
 }
 
 // Clear the board
@@ -104,7 +95,6 @@ function clear() {
   squares.forEach((square) => {
     square.textContent = "";
   });
-  currentPlayer = "X";
 }
 
 // Event listener for changing modes
@@ -118,4 +108,7 @@ document.getElementById("button").addEventListener("click", () => {
 });
 
 // Event listener for reset button
-document.getElementById("reset").addEventListener("click", clear);
+document.getElementById("reset").addEventListener("click", () => {
+  clear();
+  currentPlayer = "X";
+});
