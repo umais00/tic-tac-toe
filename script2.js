@@ -8,8 +8,6 @@ const squares = document.querySelectorAll(".square");
 const turn = document.getElementById("turn");
 const fsound = document.getElementById("myAudio");
 let currentPlayer = "X";
-let firstPlayer = "X";
-let secondPlayer = "O";
 let changeTurn = document.getElementById("chngTurn");
 let checkForWin;
 
