@@ -1,6 +1,6 @@
 //function for crating random number 0-9
 function rndm() {
-  return Math.floor(Math.random() * 10); // Use for other purposes if needed
+  return Math.floor(Math.random() * 9);
 }
 
 // Select squares and turn element
@@ -26,15 +26,12 @@ function handleMove(event) {
     square.style.color = currentPlayer === "X" ? "#0c6291" : "#ff9f1c";
     fsound.play();
     winningLogic();
-    if (winningLogic()) {
-      // Check for current player's win
-      turn.innerHTML = ` ${currentPlayer} Wins! `;
-    } else {
-      // Toggle the player
+    if (!checkForWin) {
       currentPlayer = currentPlayer === "X" ? "O" : "X";
-      turn.innerHTML = ` ${currentPlayer}'s Turn! `;
       bot();
     }
+
+    winningLogic();
   }
 }
 
@@ -46,9 +43,10 @@ function bot() {
     if (csquare && !csquare.textContent) {
       // Check if square exists and is empty
       csquare.textContent = currentPlayer;
+      winningLogic();
+
       currentPlayer = currentPlayer === "X" ? "O" : "X";
 
-      winningLogic();
       break;
     }
     maxAttempts--;
@@ -78,7 +76,7 @@ function winningLogic() {
       squares[a].textContent === squares[b].textContent &&
       squares[a].textContent === squares[c].textContent
     ) {
-      const winner = currentPlayer === "X" ? "O" : "X";
+      const winner = currentPlayer;
       document.getElementById("winner").textContent = `${winner} WON!!`;
       setTimeout(() => {
         document.getElementById("winner").textContent = "";
