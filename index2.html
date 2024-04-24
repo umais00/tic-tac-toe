@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="style2.css" />
+  </head>
+  <body style="background-color: rgb(236, 74, 137)">
+    <header>
+      <h1><span>T</span>ic<span>T</span>ac<span>T</span>oe</h1>
+      <div class="buttons">
+        <button class="button-5" id="button" role="button">mode</button>
+        <button class="button-5" id="reset" role="button">reset</button>
+        <button class="button-5" id="chngTurn" role="button">
+          change turn
+        </button>
+      </div>
+    </header>
+    <div class="turn"></div>
+    <div class="board">
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+    </div>
+    <h2 id="winner"></h2>
+    <audio id="myAudio">
+      <source src="assets/click.MP3" type="audio/mpeg" />
+    </audio>
+  </body>
+</html>
+<script src="script2.js"></script>
