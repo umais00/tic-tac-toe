@@ -42,6 +42,7 @@ function bot() {
     let csquare = squares[bmove];
     if (csquare && !csquare.textContent) {
       // Check if square exists and is empty
+      csquare.style.color = currentPlayer === "X" ? "#0c6291" : "#ff9f1c";
       csquare.textContent = currentPlayer;
       winningLogic();
 
