@@ -19,9 +19,11 @@ changeMode.addEventListener("click", changeLight);
 document.getElementById("reset").addEventListener("click", () => {
   clear();
   currentPlayer = "X";
-  // Reset game over flag and enable buttons
   gameOver = false;
   enableButtons();
+  // Reset the changeTurn event listener to prevent bot from playing after reset
+  changeTurn.removeEventListener("click", botStartsFirst);
+  changeTurn.addEventListener("click", bot); // Re-attach for intended functionality
 });
 
 //button for making bot start first
@@ -104,6 +106,25 @@ function winningLogic() {
       }, 4900);
       gameOver = true;
       disableButtons();
+      // Blink winning squares
+      const winningSquares = [squares[a], squares[b], squares[c]];
+      let blinkInterval = setInterval(function () {
+        winningSquares.forEach((square) => {
+          square.style.backgroundColor = "grey";
+          square.style.visibility =
+            square.style.visibility === "hidden" ? "visible" : "hidden";
+        });
+      }, 250);
+
+      // Stop blinking after 5 seconds
+      setTimeout(() => {
+        clearInterval(blinkInterval);
+        winningSquares.forEach((square) => {
+          square.style.backgroundColor = "transparent";
+          square.style.visibility = "visible";
+          clear();
+        });
+      }, 5000);
       return true;
     }
   }
@@ -168,7 +189,7 @@ function botStartsFirst() {
   }
 
   // If the board is clear, let the bot start first
-  if (isBoardClear) {
+  if (isBoardClear && !gameOver) {
     bot();
   }
 }

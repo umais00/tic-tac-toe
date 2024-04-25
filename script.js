@@ -23,6 +23,7 @@ function handleMove(event) {
     square.textContent = currentPlayer;
     // Set color for X and O
     square.style.color = currentPlayer === "X" ? "#0c6291" : "#ff9f1c";
+
     winningLogic();
     currentPlayer = currentPlayer === "X" ? "O" : "X";
     fsound.play();
@@ -57,7 +58,27 @@ function winningLogic() {
       setTimeout(() => {
         document.getElementById("winner").textContent = "";
       }, 5000);
-      clear();
+
+      // Blink winning squares
+      const winningSquares = [squares[a], squares[b], squares[c]];
+      let blinkInterval = setInterval(function () {
+        winningSquares.forEach((square) => {
+          square.style.backgroundColor = "grey";
+          square.style.visibility =
+            square.style.visibility === "hidden" ? "visible" : "hidden";
+        });
+      }, 250); // Adjust blink interval (ms)
+
+      // Stop blinking after 5 seconds
+      setTimeout(() => {
+        clearInterval(blinkInterval);
+        winningSquares.forEach((square) => {
+          square.style.backgroundColor = "transparent";
+          square.style.visibility = "visible";
+          clear();
+        });
+      }, 5000);
+
       return;
     }
   }
