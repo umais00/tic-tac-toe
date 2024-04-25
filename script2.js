@@ -43,19 +43,17 @@ function handleMove(event) {
     square.textContent = currentPlayer;
     square.style.color = currentPlayer === "X" ? "#0c6291" : "#ff9f1c";
     fsound.play();
-    if (winningLogic()) return; // Check for win before switching player
-    if ([...squares].every((square) => square.textContent)) {
-      declareDraw();
-      return;
-    }
+    if (winningLogic()) return;
     currentPlayer = currentPlayer === "X" ? "O" : "X";
-    if (currentPlayer === "O") bot();
+    declareDraw();
+    bot();
+    return;
   }
 }
 
 //3 function for the bot's turn
 function bot() {
-  let maxAttempts = 9; // Maximum attempts to find a vacant square
+  let maxAttempts = 10; // Maximum attempts to find a vacant square
   while (maxAttempts > 0) {
     let bmove = rndm(); // Assuming rndm() generates a random number
     let csquare = squares[bmove];
@@ -134,10 +132,14 @@ function winningLogic() {
 // Declare draw function
 function declareDraw() {
   if ([...squares].every((square) => square.textContent)) {
-    clear();
     gameOver = true;
     disableButtons();
-    document.getElementById("winner").textContent = `it's a draw!!`;
+
+    setTimeout(() => {
+      document.getElementById("winner").textContent = `it's a draw!!`;
+      clear();
+    }, 2000);
+    document.getElementById("winner").textContent = ``;
   }
 }
 
