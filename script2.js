@@ -3,7 +3,6 @@ const squares = document.querySelectorAll(".square");
 const fsound = document.getElementById("myAudio");
 let currentPlayer = "X";
 let changeTurn = document.getElementById("chngTurn");
-let gameOver = false;
 let changeMode = document.getElementById("button");
 
 // Event listener for clicks and touchstart
@@ -19,11 +18,7 @@ changeMode.addEventListener("click", changeLight);
 document.getElementById("reset").addEventListener("click", () => {
   clear();
   currentPlayer = "X";
-  gameOver = false;
   enableButtons();
-  // Reset the changeTurn event listener to prevent bot from playing after reset
-  changeTurn.removeEventListener("click", botStartsFirst);
-  changeTurn.addEventListener("click", bot); // Re-attach for intended functionality
 });
 
 //button for making bot start first
@@ -60,9 +55,8 @@ function bot() {
     if (csquare && !csquare.textContent) {
       // Check if square exists and is empty
       csquare.style.color = currentPlayer === "X" ? "#0c6291" : "#ff9f1c";
-      csquare.textContent = currentPlayer;
+      csquare.textContent = currentPlayer; // Check for winning condition after the bot's move
 
-      // Check for winning condition after the bot's move
       if (winningLogic()) {
         return; // Exit the function if winning condition is met
       }
@@ -76,7 +70,6 @@ function bot() {
 
 //function for the winning logic
 function winningLogic() {
-  // Winning combinations
   const winCombinations = [
     [0, 1, 2],
     [3, 4, 5],
@@ -88,23 +81,23 @@ function winningLogic() {
     [2, 4, 6], // Diagonals
   ];
 
-  // Check each winning combination
   for (let combination of winCombinations) {
     const [a, b, c] = combination;
-    if (
-      squares[a].textContent &&
-      squares[a].textContent === squares[b].textContent &&
-      squares[a].textContent === squares[c].textContent
-    ) {
-      const winner = currentPlayer;
+    const squareA = squares[a].textContent;
+    const squareB = squares[b].textContent;
+    const squareC = squares[c].textContent;
+
+    if (squareA && squareA === squareB && squareA === squareC) {
+      const winner = squareA;
       document.getElementById("winner").textContent = `${winner} WON!!`;
+
       setTimeout(() => {
         document.getElementById("winner").textContent = "";
         clear();
       }, 4900);
-      gameOver = true;
+
       disableButtons();
-      // Blink winning squares
+
       const winningSquares = [squares[a], squares[b], squares[c]];
       let blinkInterval = setInterval(function () {
         winningSquares.forEach((square) => {
@@ -114,7 +107,6 @@ function winningLogic() {
         });
       }, 250);
 
-      // Stop blinking after 5 seconds
       setTimeout(() => {
         clearInterval(blinkInterval);
         winningSquares.forEach((square) => {
@@ -123,22 +115,23 @@ function winningLogic() {
           clear();
         });
       }, 5000);
+
       return true;
     }
   }
+
   declareDraw();
 }
 
 // Declare draw function
 function declareDraw() {
   if ([...squares].every((square) => square.textContent)) {
-    gameOver = true;
     disableButtons();
 
     setTimeout(() => {
       document.getElementById("winner").textContent = `it's a draw!!`;
       clear();
-    }, 2000);
+    }, 1500);
     document.getElementById("winner").textContent = ``;
   }
 }
@@ -166,7 +159,7 @@ function disableButtons() {
     square.removeEventListener("click", handleMove);
     square.removeEventListener("touchstart", handleMove);
   });
-  changeTurn.removeEventListener("click", bot);
+  changeTurn.removeEventListener("click", botStartsFirst);
   changeMode.removeEventListener("click", changeLight);
 }
 
@@ -176,7 +169,7 @@ function enableButtons() {
     square.addEventListener("click", handleMove);
     square.addEventListener("touchstart", handleMove);
   });
-  changeTurn.addEventListener("click", bot);
+  changeTurn.addEventListener("click", botStartsFirst);
   changeMode.addEventListener("click", changeLight);
 }
 
@@ -188,10 +181,12 @@ function botStartsFirst() {
       isBoardClear = false;
       break;
     }
-  }
+  } // If the board is clear, let the bot start first
 
-  // If the board is clear, let the bot start first
-  if (isBoardClear && !gameOver) {
+  if (isBoardClear) {
+    currentPlayer = "X";
     bot();
+  } else {
+    clear();
   }
 }
